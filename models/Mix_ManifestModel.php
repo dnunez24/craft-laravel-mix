@@ -33,11 +33,11 @@ class Mix_ManifestModel extends BaseModel
      *
      */
     public function __construct(
+        $attributes = null,
         $ioHelper = null,
         $jsonHelper = null,
         $pathHelper = null,
-        $urlHelper = null,
-        $attributes = null
+        $urlHelper = null
     ) {
         $this->ioHelper = $ioHelper ?? (new IOHelper);
         $this->jsonHelper = $jsonHelper ?? (new JsonHelper);
