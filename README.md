@@ -5,24 +5,23 @@ Plugin that incorporates [Laravel Mix](https://laravel.com/docs/5.4/mix) to Craf
 ## Requirements
 
 - PHP 7+
-- Node JS 6+
+- Node.js 6+
+- CraftCMS 2.5+
 
 ## Installation
 
-Download and install this plugin to your `CRAFT_PLUGINS_PATH`. You can use Composer to do this if you've set your project up to use Composer for managing dependencies.
+Download and install this plugin to your `CRAFT_PLUGINS_PATH`. You can do this manually, or you can use Composer if you've set your project up to use Composer for managing dependencies. Since this plugin's `composer.json` configures this package as a `craft-plugin` type, Composer should install it in your Craft plugins directory automatically. If you have trouble with that, see the [Composer Installers](https://github.com/composer/installers) repo for configuration options.
 
 ```
 composer require dnunez24/craft-laravel-mix
 ```
 
-Create a `package.json` file with the following
+Create a `package.json` file with the following configuration to install Laravel Mix dependencies and configure asset build tasks.
 
 ```json
 {
     "private": "true",
     "scripts": {
-        "lint:js": "eslint src",
-        "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch-poll": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --watch-poll --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -36,7 +35,7 @@ Create a `package.json` file with the following
 }
 ```
 
-Install the dependencies using `npm` or `yarn`
+Install the Node.js dependencies using `npm` or `yarn`
 
 ```bash
 npm install
@@ -44,25 +43,24 @@ npm install
 yarn install
 ```
 
-Create a `webpack.mix.js` file at the root of your project. See the [Laravel Mix](https://laravel.com/docs/5.4/mix) documentation for configuration details.
+Create a `webpack.mix.js` file at the root of your project to configure Laravel Mix to build your assets. See the [Laravel Mix](https://laravel.com/docs/5.4/mix) documentation for configuration details and more options. Be sure to configure the `publicPath` option for Mix to point at the directory from which you will serve static assets (images, fonts, javascript and CSS).
 
 ```js
 const { mix } = require('laravel-mix');
 
 mix.options({
-    // this must be the relative path from the webpack.mix.js 
+    // this must be the relative path from the webpack.mix.js
     // file to your public web directory
     publicPath: 'public',
   })
   .sass('src/assets/styles/main.scss', 'public/assets/styles')
   .js('src/assets/scripts/main.js', 'public/assets/scripts')
-  .sourceMaps();
+  .sourceMaps()
   .browserSync('www.mysite.com');
 
 if (mix.config.inProduction) {
   mix.version();
 }
-
 ```
 
 ## Usage
