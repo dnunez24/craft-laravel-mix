@@ -6,55 +6,9 @@
     "email": "dnunez24@alumni.stanford.edu"
   }],
   "type": "craft-plugin",
-  "repositories": [{
-    "type": "vcs",
-    "url": "https://github.com/pixelandtonic/Twig"
-  }, {
-    "type": "vcs",
-    "url": "https://github.com/pixelandtonic/guzzle3"
-  }, {
-    "type": "vcs",
-    "url": "https://github.com/pixelandtonic/simplepie"
-  }, {
-    "type": "vcs",
-    "url": "https://github.com/pixelandtonic/pel"
-  }, {
-    "type": "vcs",
-    "url": "https://github.com/pixelandtonic/yii"
-  }],
   "require": {
     "php": ">= 7.0.0",
     "composer/installers": "~1.0"
   },
-  "minimum-stability": "stable",
-  "require-dev": {
-    "craftcms/cms": "^2.6.2981@dev",
-    "yiisoft/yii": "dev-master",
-    "codeception/codeception": "^2.2",
-    "codeception/verify": "^0.3.3",
-    "codeception/specify": "^0.4.6",
-    "codeception/aspect-mock": "^2.0"
-  },
-  "autoload-dev": {
-    "classmap": [
-      "vendor/craftcms/cms/src/",
-      "vendor/yiisoft/yii/framework/"
-    ],
-    "exclude-from-classmap": [
-      "vendor/yiisoft/yii/framework/yiilite.php"
-    ],
-    "psr-4": {
-      "Craft\\": [
-        "services/",
-        "twigextensions/",
-        "variables/"
-      ]
-    }
-  },
-  "scripts": {
-    "test": "codecept run",
-    "test:acceptance": "codecept run acceptance",
-    "test:functional": "codecept run functional",
-    "test:unit": "codecept run unit"
-  }
+  "minimum-stability": "stable"
 }
