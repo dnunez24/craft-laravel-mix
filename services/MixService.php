@@ -41,10 +41,10 @@ class MixService extends BaseApplicationComponent
     /**
      * Get the resolved asset path
      *
-     * @param string $path Source asset path
-     * @param string $manifestDirectory Directory of the Mix manifest file
+     * @param string $path
+     * @param string $manifestDirectory
      *
-     * @return string Resolved asset path
+     * @return string
      */
     public function getAssetPath(string $path, $manifestDirectory = '')
     {
@@ -72,9 +72,9 @@ class MixService extends BaseApplicationComponent
     /**
      * Gets assets file path from Mix manifest
      *
-     * @param string $source Source path to asset file
+     * @param string $source
      *
-     * @return string Resolved path to asset file
+     * @return string
      */
     protected function getManifestAssetPath(string $source)
     {
@@ -94,9 +94,9 @@ class MixService extends BaseApplicationComponent
     /**
      * Gets asset path for hot module replacement mode
      *
-     * @param string $path Original path to the asset
+     * @param string $path
      *
-     * @return string URL to the asset in hot module replacement mode
+     * @return string
      */
     protected function getHotModuleReplacementAssetPath(string $path)
     {
