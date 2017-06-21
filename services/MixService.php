@@ -2,174 +2,104 @@
 
 namespace Craft;
 
+use Mix\PathResolver;
+
 class MixService extends BaseApplicationComponent
 {
     /**
-     * @var string PLUGIN_NAME Name of the plugin
+     * @var Mix_HotModuleReplacementModel
      */
-    const PLUGIN_NAME = 'mix';
+    protected $hotModuleReplacement;
 
     /**
-    * @var string $manifestDirectory Directory of the Mix manifest file
-    */
-    protected $manifestDirectory;
-    
-    /**
-     * @var object $config Craft configuration object
+     * @var Mix_ManifestModel
      */
-    protected $config;
-    
+    protected $manifest;
+
     /**
-     * @var IOHelper $ioHelper Helper class for I/O operations
+     * @var Mix_PathHelper
      */
-    protected $ioHelper;
-    
-    /**
-     * @var JsonHelper $jsonHelper Helper class for JSON operations
-     */
-    protected $jsonHelper;
-    
-    /**
-     * @var UrlHelper $urlHelper Helper class for URL operations
-     */
-    protected $urlHelper;
-    
+    protected $pathHelper;
+
     /**
      * Initialize the Mix Service
      *
-     * @param ConfigService $config
-     * @param IOHelper $ioHelper
-     * @param JsonHelper $jsonHelper
-     * @param UrlHelper $urlHelper
+     * @param Mix_HotModuleReplacementModel $hotModuleReplacement
+     * @param Mix_ManifestModel $manifest
+     * @param Mix_PathHelper $pathHelper
      */
     public function __construct(
-        $config = null,
-        $ioHelper = null,
-        $jsonHelper = null,
-        $urlHelper = null
+        $hotModuleReplacement = null,
+        $manifest = null,
+        $pathHelper = null
     ) {
-        $this->config = $config ?? craft()->config;
-        $this->ioHelper = $ioHelper ?? (new IOHelper);
-        $this->jsonHelper = $jsonHelper ?? (new JsonHelper);
-        $this->urlHelper = $urlHelper ?? (new UrlHelper);
-    }
-    
-    /**
-     * Find the files version
-     *
-     * @param $path
-     * @return string
-     *
-     * @throws Exception
-     */
-    public function getAssetPath($path, $manifestDirectory = '')
-    {
-        $this->setManifestDirectory($manifestDirectory);
-        
-        if ($this->isHotModuleReplacementMode()) {
-            return $this->getHotModuleReplacementPath($path);
-        }
-        
-        return $this->getManifestPath($path);
-    }
-    
-    /**
-     * 
-     */
-    protected function setManifestDirectory($directory)
-    {
-        $this->manifestDirectory = $this->resolvePath($directory);
-        return $this->manifestDirectory;
-    }
-    
-    /**
-     * 
-     */
-    protected function getManifestDirectory()
-    {
-        return $this->manifestDirectory;
-    }
-    
-    /**
-     * Gets assets file path from Mix manifest
-     *
-     * @param string $path Relative path to asset file
-     * @return string Resolved path to asset file
-     * @throws \Craft\Exception
-     */
-    protected function getManifestPath($path = '')
-    {
-        $manifestFile = $this->getManifestFile();
-        $contents = $this->ioHelper->getFileContents($manifestFile);
-        $manifest = $this->jsonHelper->decode($contents);
-    
-        if (! array_key_exists($path, $manifest)) {
-            throw new Exception(
-                "Unable to locate Mix file: {$path}. Please check your ".
-                "webpack.mix.js output paths and try again."
-            );
-        }
-        
-        // return $this->getManifestDirectory().$manifest[$path];
-        return $this->urlHelper->getUrl($manifest[$path]);
-    }
-    
-    /**
-     * Returns path to the Mix manifest file
-     *
-     * @return string Path to manifest file
-     */
-    protected function getManifestFile()
-    {
-        $manifestFile = $this->getPublicPath($this->getManifestDirectory().'/mix-manifest.json');
-        
-        if (! $this->ioHelper->fileExists($manifestFile)) {
-            throw new Exception('The Mix manifest does not exist.');
-        }
-        
-        return $manifestFile;
-    }
-    
-    /**
-     * 
-     */
-    protected function getPublicPath($path = '')
-    {
-        $publicPath = $this->config->get('publicPath', self::PLUGIN_NAME);
-        return $publicPath.$this->resolvePath($path);
+        $this->hotModuleReplacement = $hotModuleReplacement ?? (new Mix_HotModuleReplacementModel);
+        $this->manifest = $manifest ?? (new Mix_ManifestModel);
+        $this->pathHelper = $pathHelper ?? (new Mix_PathHelper);
     }
 
     /**
-     * 
+     * Get the resolved asset path
+     *
+     * @param string $path Source asset path
+     * @param string $manifestDirectory Directory of the Mix manifest file
+     *
+     * @return string Resolved asset path
      */
-    protected function isHotModuleReplacementMode()
+    public function getAssetPath(string $path, $manifestDirectory = '')
     {
-        $file = $this->getPublicPath($this->getManifestDirectory().'/hot');
-        
-        if ($this->ioHelper->fileExists($file)) {
-            return true;
+        $path = $this->pathHelper->resolvePath($path);
+        $manifestDirectory = $this->pathHelper->resolvePath($manifestDirectory);
+
+        $this->setManifestDirectory($manifestDirectory);
+
+        if ($this->isHotModuleReplacementEnabled()) {
+            return $this->getHotModuleReplacementAssetPath($path);
         }
-        
-        return false;
+
+        return $this->getManifestAssetPath($path);
     }
-    
+
     /**
-     * 
+     *
      */
-    protected function getHotModuleReplacementPath(string $path)
+    protected function setManifestDirectory(string $manifestDirectory)
     {
-        return $this->urlHelper->getUrl("//localhost:8080{$this->resolvePath($path)}");
+        $this->hotModuleReplacement->setDirectory($manifestDirectory);
+        $this->manifest->setDirectory($manifestDirectory);
     }
-    
+
     /**
-     * 
+     * Gets assets file path from Mix manifest
+     *
+     * @param string $source Source path to asset file
+     *
+     * @return string Resolved path to asset file
      */
-    protected function resolvePath($path)
+    protected function getManifestAssetPath(string $source)
     {
-        if (! strpos($path, '/')) {
-            $path = "/{$path}";
-        }
-        
-        return $path;
+        return $this->manifest->getAssetPath($source);
+    }
+
+    /**
+     * Check if Mix is running in hot module replacement mode
+     *
+     * @return bool
+     */
+    protected function isHotModuleReplacementEnabled()
+    {
+        return $this->hotModulereplacement->isEnabled();
+    }
+
+    /**
+     * Gets asset path for hot module replacement mode
+     *
+     * @param string $path Original path to the asset
+     *
+     * @return string URL to the asset in hot module replacement mode
+     */
+    protected function getHotModuleReplacementAssetPath(string $path)
+    {
+        return $this->hotModuleReplacement->getAssetPath($path);
     }
 }
