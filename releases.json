@@ -2,13 +2,9 @@
     {
         "version": "0.1.0",
         "downloadUrl": "https://archive.github.com/dnunez24/craft-laravel-mix/releases/craft-laravel-mix-0.1.0.zip",
-        "date": "2017-05-14T00:00:00-08:00",
+        "date": "2017-06-20T09:00:00-08:00",
         "notes": [
-            "# Initial Release",
-            "[Added] It’s now possible to create new products right from Product Selector Modals (like the ones used by Products fields).",
-            "[Improved] Variants are now defined in a new Variant Matrix field, right on the main Edit Product pages.",
-            "# Bug Fixes",
-            "[Fixed] Fixed a Twig error that occurred if you manually went to /commerce/orders/new. You now receive a 404 error instead."
+            "# Initial Release"
         ]
     }
 ]
