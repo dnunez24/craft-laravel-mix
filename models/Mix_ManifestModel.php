@@ -30,7 +30,13 @@ class Mix_ManifestModel extends BaseModel
     protected $urlHelper;
 
     /**
+     * Initialize the manifest model
      *
+     * @param array $array
+     * @param IOHelper $ioHelper
+     * @param JsonHelper $jsonHelper
+     * @param Mix_PathHelper $pathHelper
+     * @param UrlHelper $urlHelper
      */
     public function __construct(
         $attributes = null,
@@ -47,7 +53,12 @@ class Mix_ManifestModel extends BaseModel
     }
 
     /**
+     * Get mapped asset path from manifest file
      *
+     * @param string $sourcePath
+     *
+     * @return string
+     * @throws Exception
      */
     public function getAssetPath(string $sourcePath)
     {
@@ -61,7 +72,9 @@ class Mix_ManifestModel extends BaseModel
     }
 
     /**
+     * Get manifest file
      *
+     * @return string
      */
     protected function getFile()
     {
@@ -71,7 +84,9 @@ class Mix_ManifestModel extends BaseModel
     }
 
     /**
+     * Read & decode contents of manifest file
      *
+     * @return mixed
      */
     protected function readFile()
     {
@@ -81,7 +96,9 @@ class Mix_ManifestModel extends BaseModel
     }
 
     /**
+     * Define model attributes
      *
+     * @return array
      */
     protected function defineAttributes()
     {
