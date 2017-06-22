@@ -59,7 +59,7 @@ class Mix_HotModuleReplacementModel extends BaseModel
     public function isEnabled()
     {
         $path = $this->directory.'/'.self::FLAG_FILENAME;
-        return (bool)$this->pathHelper->publicPath($path);
+        return (bool)$this->pathHelper->getPublicPath($path);
     }
 
     protected function defineAttributes()
