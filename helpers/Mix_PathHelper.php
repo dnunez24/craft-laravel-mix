@@ -5,19 +5,25 @@ namespace Craft;
 class Mix_PathHelper
 {
     /**
-     * @var string PLUGIN_NAME Name of the plugin
+     * @var string PLUGIN_NAME
      */
-    const PLUGIN_NAME = 'mix';
+    const PLUGIN_HANDLE = 'mix';
 
+    /**
+     * @var ConfigService
+     */
     protected $config;
 
+    /**
+     * @var IOHelper
+     */
     protected $ioHelper;
 
     /**
      * Initializes the path resolver
      *
+     * @param Config $config
      * @param IOHelper $ioHelper
-     * @return MixPathResolver Path resolver instance
      */
     public function __construct(
         $config = null,
@@ -25,21 +31,6 @@ class Mix_PathHelper
     ) {
         $this->config = $config ?? craft()->config;
         $this->ioHelper = $ioHelper ?? (new IOHelper);
-    }
-
-    /**
-     * Resolves path with proper directory separators
-     *
-     * @param string $path Original path
-     * @return string Resolved path
-     */
-    public function resolvePath(string $path)
-    {
-        if (!$this->startsWith($path, '/')) {
-            $path = "/{$path}";
-        }
-
-        return $this->ioHelper->getRealPath($path);
     }
 
     /**
@@ -52,7 +43,7 @@ class Mix_PathHelper
      */
     public function getPublicPath($path = '')
     {
-        $publicDir = $this->config->get('publicDir', self::PLUGIN_NAME);
+        $publicDir = $this->config->get('publicDir', self::PLUGIN_HANDLE);
         $publicPath = $this->ioHelper->getRealPath($publicDir.'/'.$path);
 
         if (!$publicPath) {
@@ -60,17 +51,5 @@ class Mix_PathHelper
         }
 
         return $publicPath;
-    }
-
-    /**
-     * Tests if string starts with the specified character
-     *
-     * @param string $str String to test
-     * @param string $char Character to look for
-     * @return bool Whether the string starts with the specified character
-     */
-    protected function startsWith(string $str, string $char)
-    {
-        return strpos($str, $char) === 0;
     }
 }
