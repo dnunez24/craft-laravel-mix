@@ -2,8 +2,6 @@
 
 namespace Craft;
 
-use Mix\PathResolver;
-
 class MixService extends BaseApplicationComponent
 {
     /**
@@ -17,11 +15,6 @@ class MixService extends BaseApplicationComponent
     protected $manifest;
 
     /**
-     * @var Mix_PathHelper
-     */
-    protected $pathHelper;
-
-    /**
      * Initialize the Mix Service
      *
      * @param Mix_HotModuleReplacementModel $hotModuleReplacement
@@ -30,12 +23,10 @@ class MixService extends BaseApplicationComponent
      */
     public function __construct(
         $hotModuleReplacement = null,
-        $manifest = null,
-        $pathHelper = null
+        $manifest = null
     ) {
         $this->hotModuleReplacement = $hotModuleReplacement ?? (new Mix_HotModuleReplacementModel);
         $this->manifest = $manifest ?? (new Mix_ManifestModel);
-        $this->pathHelper = $pathHelper ?? (new Mix_PathHelper);
     }
 
     /**
@@ -48,9 +39,6 @@ class MixService extends BaseApplicationComponent
      */
     public function getAssetPath(string $path, $manifestDirectory = '')
     {
-        $path = $this->pathHelper->resolvePath($path);
-        $manifestDirectory = $this->pathHelper->resolvePath($manifestDirectory);
-
         $this->setManifestDirectory($manifestDirectory);
 
         if ($this->isHotModuleReplacementEnabled()) {
