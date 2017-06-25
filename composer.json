@@ -1,6 +1,6 @@
 {
   "name": "dnunez24/craft-laravel-mix",
-  "description": "Use Laravel Mix in Craft CMS templates",
+  "description": "Manage asset builds in CraftCMS using Laravel Mix",
   "authors": [{
     "name": "David Nuñez",
     "email": "dnunez24@alumni.stanford.edu"
