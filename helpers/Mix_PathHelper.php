@@ -32,24 +32,52 @@ class Mix_PathHelper
         $this->config = $config ?? craft()->config;
         $this->ioHelper = $ioHelper ?? (new IOHelper);
     }
-
+    
     /**
      * Get a path relative to the site public directory
      *
      * @param string $path
+     * @param bool $raiseException
      *
      * @return string
      * @throws Exception
      */
-    public function getPublicPath($path = '')
+    public function getPublicPath($path = '', $raiseException = false)
     {
         $publicDir = $this->config->get('publicDir', self::PLUGIN_HANDLE);
         $publicPath = $this->ioHelper->getRealPath($publicDir.'/'.$path);
 
-        if (!$publicPath) {
+        if (!$publicPath && $raiseException) {
             throw new Exception("{$publicPath} does not exist");
         }
 
-        return $publicPath;
+        return (string)$publicPath;
+    }
+    
+    /**
+     * Prefixes a character to paths without the leading character
+     *
+     * @param string $path
+     * @return string
+     */
+    public function prefix(string $path, $char = '/')
+    {
+        if (!$this->startsWith($path, $char)) {
+            $path = "{$char}{$path}";
+        }
+
+        return $path;
+    }
+
+    /**
+     * Tests if string starts with the specified character
+     *
+     * @param string $str
+     * @param string $char
+     * @return bool
+     */
+    protected function startsWith(string $str, string $char)
+    {
+        return strpos($str, $char) === 0;
     }
 }

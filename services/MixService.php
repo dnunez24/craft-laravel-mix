@@ -61,12 +61,16 @@ class MixService extends BaseApplicationComponent
     }
 
     /**
+     * Set the manifest directory for model dependencies
      *
+     * @param string $manifestDirectory
+     *
+     * @return void
      */
     protected function setManifestDirectory(string $manifestDirectory)
     {
-        $this->hotModuleReplacement->setDirectory($manifestDirectory);
-        $this->manifest->setDirectory($manifestDirectory);
+        $this->manifest->directory = $manifestDirectory;
+        $this->hotModuleReplacement->directory = $manifestDirectory;    
     }
 
     /**

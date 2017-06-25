@@ -63,12 +63,13 @@ class Mix_ManifestModel extends BaseModel
     public function getAssetPath(string $sourcePath)
     {
         $manifest = $this->readFile();
+        $path = $this->pathHelper->prefix($sourcePath);
 
-        if (!array_key_exists($sourcePath, $manifest)) {
-            throw new Exception("Unable to locate path '{$sourcePath}' in Mix manifest.");
+        if (!array_key_exists($path, $manifest)) {
+            throw new Exception("Unable to locate path '{$path}' in Mix manifest.");
         }
 
-        return $this->urlHelper->getUrl($manifest[$sourcePath]);
+        return $this->urlHelper->getUrl($manifest[$path]);
     }
 
     /**
@@ -79,7 +80,7 @@ class Mix_ManifestModel extends BaseModel
     protected function getFile()
     {
         $path = $this->directory.'/'.self::MANIFEST_FILENAME;
-        $file = $this->pathHelper->getPublicPath($path);
+        $file = $this->pathHelper->getPublicPath($path, true);
         return $file;
     }
 

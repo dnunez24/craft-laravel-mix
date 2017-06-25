@@ -46,7 +46,7 @@ class Mix_HotModuleReplacementModel extends BaseModel
     public function getAssetPath(string $path)
     {
         if (!$this->urlHelper->isFullUrl($path)) {
-            $path = "/{$path}";
+            $path = $this->pathHelper->prefix($path);
         }
 
         return $this->urlHelper->getUrl(self::BASE_URL.$path);
