@@ -20,7 +20,7 @@ class Mix_PathHelper
     protected $ioHelper;
 
     /**
-     * Initializes the path resolver
+     * Initialize the path helper
      *
      * @param Config $config
      * @param IOHelper $ioHelper
@@ -55,9 +55,10 @@ class Mix_PathHelper
     }
     
     /**
-     * Prefixes a character to paths without the leading character
+     * Prefix character to path if not present
      *
      * @param string $path
+     *
      * @return string
      */
     public function prefix(string $path, $char = '/')
@@ -70,10 +71,11 @@ class Mix_PathHelper
     }
 
     /**
-     * Tests if string starts with the specified character
+     * Check if string starts with the specified character
      *
      * @param string $str
      * @param string $char
+     *
      * @return bool
      */
     protected function startsWith(string $str, string $char)

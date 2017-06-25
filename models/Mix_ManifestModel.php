@@ -32,7 +32,7 @@ class Mix_ManifestModel extends BaseModel
     /**
      * Initialize the manifest model
      *
-     * @param array $array
+     * @param array $attributes
      * @param IOHelper $ioHelper
      * @param JsonHelper $jsonHelper
      * @param Mix_PathHelper $pathHelper

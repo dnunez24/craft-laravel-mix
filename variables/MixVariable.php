@@ -5,12 +5,14 @@ namespace Craft;
 class MixVariable
 {
     /**
-     * Returns the mix asset file path
+     * Get the mix asset file path
      *
-     * @param string $path Path to the file relative to public directory
+     * @param string $path
+     * @param string $manifestDirectory
+     *
      * @return string
      */
-    public function assetPath(string $path, $manifestDirectory = '')
+    public function getAssetPath(string $path, $manifestDirectory = '')
     {
         return craft()->mix->getAssetPath($path, $manifestDirectory);
     }

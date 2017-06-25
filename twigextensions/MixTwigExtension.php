@@ -9,7 +9,7 @@ use Twig_SimpleFunction;
 class MixTwigExtension extends \Twig_Extension
 {
     /**
-    * Returns the extensions filters
+    * Get the extension filters
     *
     * @return array
     */
@@ -21,7 +21,7 @@ class MixTwigExtension extends \Twig_Extension
     }
 
     /**
-    * Returns the extensions functions
+    * Get the extension functions
     *
     * @return string
     */
@@ -33,9 +33,11 @@ class MixTwigExtension extends \Twig_Extension
     }
 
     /**
-    * Returns file path for mix asset
+    * Get file path for mix asset
     *
     * @param string $path
+    * @param string $manifestDirectory
+    *
     * @return string
     */
     public function mix(string $path, $manifestDirectory = '')

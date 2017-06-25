@@ -25,7 +25,11 @@ class Mix_HotModuleReplacementModel extends BaseModel
     protected $urlHelper;
 
     /**
+     * Initialize the hot module replacement model
      *
+     * @param array $attributes
+     * @param Mix_PathHelper $pathHelper
+     * @param UrlHelper $urlHelper
      */
     public function __construct(
         $attributes = null,
@@ -38,6 +42,7 @@ class Mix_HotModuleReplacementModel extends BaseModel
     }
 
     /**
+     * Get asset path for hot module replacement mode
      *
      * @param string $path
      *
@@ -53,6 +58,7 @@ class Mix_HotModuleReplacementModel extends BaseModel
     }
 
     /**
+     * Check if hot module replacement mode is enabled
      *
      * @return bool
      */
@@ -62,6 +68,11 @@ class Mix_HotModuleReplacementModel extends BaseModel
         return (bool)$this->pathHelper->getPublicPath($path);
     }
 
+    /**
+     * Define model attributes
+     *
+     * @return array
+     */
     protected function defineAttributes()
     {
         return [

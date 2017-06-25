@@ -61,7 +61,7 @@ class MixService extends BaseApplicationComponent
     }
 
     /**
-     * Gets assets file path from Mix manifest
+     * Get asset file path from Mix manifest
      *
      * @param string $source
      *
@@ -83,7 +83,7 @@ class MixService extends BaseApplicationComponent
     }
 
     /**
-     * Gets asset path for hot module replacement mode
+     * Get asset path for hot module replacement mode
      *
      * @param string $path
      *
