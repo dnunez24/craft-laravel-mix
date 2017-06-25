@@ -19,7 +19,6 @@ class MixService extends BaseApplicationComponent
      *
      * @param Mix_HotModuleReplacementModel $hotModuleReplacement
      * @param Mix_ManifestModel $manifest
-     * @param Mix_PathHelper $pathHelper
      */
     public function __construct(
         $hotModuleReplacement = null,
