@@ -80,7 +80,7 @@ class MixService extends BaseApplicationComponent
      */
     protected function isHotModuleReplacementEnabled()
     {
-        return $this->hotModulereplacement->isEnabled();
+        return $this->hotModuleReplacement->isEnabled();
     }
 
     /**
