@@ -6,6 +6,15 @@
     "email": "dnunez24@alumni.stanford.edu"
   }],
   "type": "craft-plugin",
+  "keywords": [
+    "craftcms",
+    "craft cms",
+    "laravel",
+    "mix",
+    "plugin",
+    "webpack"
+  ],
+  "license": "MIT",
   "require": {
     "php": ">= 7.0.0",
     "composer/installers": "~1.0"
