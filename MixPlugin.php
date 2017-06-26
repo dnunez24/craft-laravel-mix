@@ -21,7 +21,7 @@ class MixPlugin extends BasePlugin
      */
     public function getDescription()
     {
-        return 'Helper plugin for using Laravel Mix in Craft templates';
+        return 'Enables the use of Laravel Mix for managing asset builds';
     }
 
     /**
