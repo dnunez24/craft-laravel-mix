@@ -46,9 +46,7 @@ Then simply require the package to ad it to your `composer.json` file and instal
 composer require dnunez24/craft-laravel-mix
 ```
 
-## Usage
-
-Create a `package.json` file with the following configuration to install Laravel Mix dependencies and configure asset build tasks.
+Create a `package.json` file with the following contents to install Laravel Mix dependencies and configure asset build tasks.
 
 ```json
 {
@@ -67,15 +65,31 @@ Create a `package.json` file with the following configuration to install Laravel
 }
 ```
 
-Install the Node.js dependencies using `npm` or `yarn`
+Install the Node.js dependencies using `npm` or `yarn`.
 
 ```bash
-npm install
-# OR
-yarn install
+npm install # OR yarn install
 ```
 
-Create a `webpack.mix.js` file at the root of your project to configure Laravel Mix to build your assets. See the [Laravel Mix](https://laravel.com/docs/5.4/mix) documentation for configuration details and more options. Be sure to configure the `publicPath` option for Mix to point at the directory from which you will serve static assets (images, fonts, javascript and CSS).
+## Configuration
+
+To demonstrate usage of the plugin, let's imagine a project with the following directory structure.
+
+```
+...
+src/
+  assets/
+    js/
+      main.js
+    css/
+      main.scss
+public/
+  js/
+  css/
+...
+```
+
+Create a `webpack.mix.js` file at the root of your project to configure Laravel Mix for building your assets. See the [Laravel Mix](https://laravel.com/docs/5.4/mix) documentation for configuration details and more options. Be sure to configure the `publicPath` option to point at the directory from which you will serve static assets (images, fonts, javascript and CSS). Here's an example configuration as a starting point that would work with the previously described project structure:
 
 ```js
 const { mix } = require('laravel-mix');
@@ -85,72 +99,97 @@ mix.options({
     // file to your public web directory
     publicPath: 'public',
   })
-  .sass('src/assets/styles/main.scss', 'public/assets/styles')
-  .js('src/assets/scripts/main.js', 'public/assets/scripts')
-  .sourceMaps()
-  .browserSync('www.mysite.com');
+  // outputs built SCSS files to the public/css directory
+  .sass('src/assets/css/main.scss', 'public/css')
+  // outputs built JS files to the public/js directory
+  .js('src/assets/js/main.js', 'public/js');
 
 if (mix.config.inProduction) {
   mix.version();
 }
 ```
 
-Given a project with asset files organized as follows
+## Usage
 
-```
-...
-src/
-  assets/
-    scripts/
-      main.js
-    styles/
-      main.scss
-...
-```
-
-You can use Mix from Twig templates in the three following ways:
+There are three main ways you can use Mix from Twig templates in CraftCMS:
 
 ```twig
 {# Twig Filter #}
-<script type="text/javascript" src="{{ 'assets/scripts/main.js' | mix }}"></script>
+<script type="text/javascript" src="{{ 'js/main.js' | mix }}"></script>
 
 {# Twig Function #}
-<script type="text/javascript" src="{{ mix('assets/scripts/main.js') }}"></script>
+<script type="text/javascript" src="{{ mix('js/main.js') }}"></script>
 
-{# Twig Variable #}
-<script type="text/javascript" src="{{ craft.mix.getAssetPath('assets/scripts/main.js') }}"></script>
+{# CraftCMS Variable #}
+<script type="text/javascript" src="{{ craft.mix.getAssetPath('js/main.js') }}"></script>
 ```
 
-
 ### Dev Mode
+
+Dev mode will build your assets to target a development environment. Depending on how you've configured Mix, this may bypass certain build instructions intended only for the production environment. In the example `webpack.mix.js` file, we are only versioning assets in production mode for cache busting or similar use cases. You can build the assets for developer mode by using the `npm` script we added in our `package.json` file:
 
 ```bash
 npm run dev
 ```
 
+This will generate the following files in our example project structure:
+
+```
+public/
+  mix.js
+  mix-manifest.json
+  css/
+    main.css
+  js/
+    main.js
+```
+
+You can then use the Twig helpers from this plugin in your templates to load the assets from the `mix-manifest.json` file:
+ 
+```twig
+<link rel="stylesheet" href="{{ mix('css/app.css') }}">
+...
+<script type="text/javascript" src="{{ mix('js/main.js') }}"></script>
+```
+
+Yields
+
+```twig
+<link rel="stylesheet" href="/css/main.css">
+...
+<script type="text/javascript" src="/js/main.js"></script>
+```
+
+### Watch Mode
+
+Functions just like Dev Mode except Mix will continue running as a foreground process through NodeJS and building assets as changes to the source files are detected.
+
+```bash
+npm run watch
+```
+
 ### Hot Module Replacement Mode
 
-Build the assets and run the Webpack dev server (Hot Module Replacement mode):
+Builds your assets and runs the Webpack dev server to allow [Hot Module Replacement](https://webpack.js.org/concepts/hot-module-replacement/). It works very similarly to what is described in the [Laravel Mix](https://github.com/JeffreyWay/laravel-mix/blob/master/docs/hot-module-replacement.md) documentation. To run in HMR mode, run the following command:
 
 ```bash
 npm run hot
 ```
 
-A `mix-manifest.json` file will be generated in your `public` directory with the following content
-
-```json
-{
-  "/mix.js": "/mix.js",
-  "/assets/styles/main.css": "/assets/styles/main.css",
-  "/assets/scripts/main.js": "/assets/scripts/main.js"
-}
+You can then use the Twig helpers from this plugin in your templates to load the assets from the Webpack dev server (running at `//localhost:8080`):
+ 
+```twig
+<link rel="stylesheet" href="{{ mix('css/main.css') }}">
+...
+<script type="text/javascript" src="{{ mix('js/main.js') }}"></script>
 ```
 
-Then use the Twig function in your Craft templates like so
+Yields
 
 ```twig
-<script type="text/javascript" src="{{ mix('assets/scripts/main.js') }}"></script>
-{# Outputs: <script type="text/javascript" src="//localhost:8080/assets/scripts/main.js"></script> #}
+<link rel="stylesheet" href="//localhost:8080/css/main.css">
+...
+<script type="text/javascript" src="//localhost:8080/js/main.js"></script>
 ```
 
 ### Production Mode
@@ -161,27 +200,37 @@ or bundle your assets for production
 npm run production
 ```
 
-A `mix-manifest.json` file will be generated in your `public` directory with the following content
+This will generate the following files in our example project structure:
 
-```json
-{
-  "/mix.js": "/mix.49fd152cead1b55e6d10.js",
-  "/assets/styles/main.css": "/assets/styles/main.11dbed27c16369bf55bc7e36fb2cf415.css",
-  "/assets/scripts/main.js": "/assets/scripts/main.2761134756d7f7719ae8.js"
-}
+```
+public/
+  mix-manifest.json
+  css/
+    main.css
+  js/
+    main.js
 ```
 
-Using the Twig filters and functions as in the examples below will output the appropriate URLs for either Hot Module Replacement or Production modes.
+You can then use the Twig helpers from this plugin in your templates to load the assets from the `mix-manifest.json` file:
+ 
+```twig
+<link rel="stylesheet" href="{{ mix('css/main.css') }}">
+...
+<script type="text/javascript" src="{{ mix('js/main.js') }}"></script>
+```
 
+Yields
 
 ```twig
-<script type="text/javascript" src="{{ mix('assets/scripts/main.js') }}"></script>
-{# Outputs: <script type="text/javascript" src="https://www.site.com/assets/scripts/main.2761134756d7f7719ae8.js"></script> #}
+<link rel="stylesheet" href="/css/main.css?id=3b3bff1760a5005737de">
+...
+<script type="text/javascript" src="/js/main.js?id=5f474c7493fb1b375dca"></script>
 ```
-
 
 ## Acknowledgements
 
 TODO
 
 ## License
+
+Craft Laravel Mix is open source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
