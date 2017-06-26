@@ -96,11 +96,9 @@ Create a `webpack.mix.js` file at the root of your project to configure Laravel 
 ```js
 const { mix } = require('laravel-mix');
 
-mix.options({
-    // this must be the relative path from the webpack.mix.js
-    // file to your public web directory
-    publicPath: 'public',
-  })
+// this must be the relative path from the webpack.mix.js
+// file to your public web directory
+mix.setPublicPath('public')
   // outputs built SCSS files to the public/css directory
   .sass('src/assets/css/main.scss', 'public/css')
   // outputs built JS files to the public/js directory
