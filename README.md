@@ -109,9 +109,20 @@ if (mix.inProduction()) {
 }
 ```
 
+This plugin also provides a CraftCMS configuration value to set the public directory that it uses to locate and read from the Mix manifest file. You may want to override the setting if your path differs from the default  (`CRAFT_BASE_PATH/public`). You can do this by creating a file at `CRAFT_CONFIG_PATH/mix.php` with the following contents:
+
+```php
+<?php
+
+return [
+    // set "build" to the name of your public web directory
+    'publicDir' => 'build'
+];
+```
+
 ## Usage
 
-There are three main ways you can use Mix from Twig templates in CraftCMS:
+The primary purpose of this plugin is to provide template helpers that translate between a known path to your build assets and the real path to the assets after they have been built (which varies depending on the build mode). There are three main ways you can use Mix from Twig templates in CraftCMS:
 
 ```twig
 {# Twig Filter #}
@@ -123,6 +134,8 @@ There are three main ways you can use Mix from Twig templates in CraftCMS:
 {# CraftCMS Variable #}
 <script type="text/javascript" src="{{ craft.mix.getAssetPath('js/main.js') }}"></script>
 ```
+
+There are a handful of different modes in which you can run Mix and the plugin will work differently in each mode, as described in the following sections.
 
 ### Dev Mode
 
